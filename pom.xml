@@ -23,7 +23,20 @@
 
         <!-- Versão do Plugin Maven Compiler -->
         <maven.compiler.plugin.version>3.5.1</maven.compiler.plugin.version>
+
+        <!-- Versão do JUnit -->
+        <junit.version>4.12</junit.version>
     </properties>
+
+    <dependencies>
+        <!-- JUnit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

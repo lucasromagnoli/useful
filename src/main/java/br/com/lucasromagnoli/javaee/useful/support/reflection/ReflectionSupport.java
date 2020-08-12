@@ -1,8 +1,21 @@
 package br.com.lucasromagnoli.javaee.useful.support.reflection;
 
-public class ReflectionSupport {
+import br.com.lucasromagnoli.javaee.useful.support.string.StringSupport;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-    public static void main(String[] args) {
-        System.out.println("Working in progress");
+public class ReflectionSupport {
+    private ReflectionSupport() {};
+
+    public static <T> Object getMethod(String field, T target) {
+        String methodName = "get"+StringSupport.firstLetterToUpperCase(field);
+        try {
+            Method method = target.getClass().getMethod(methodName);
+            return method.invoke(target);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
