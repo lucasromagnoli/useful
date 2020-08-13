@@ -8,4 +8,8 @@ public class StringSupport {
                 .replace(0,1, String.valueOf(target.charAt(0)).toUpperCase())
                 .toString();
     }
+
+    public static boolean isEmpty(String target) {
+        return target == null || target.trim().length() == 0;
+    }
 }
