@@ -45,4 +45,18 @@ public class ValidationSupportTest {
         assertEquals(validation.getValidationType(), ValidationType.UNSUCCESSFUL);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void testValidationTargetNull() {
+        Validation validation = ValidationSupport.target(null)
+                .field("age", (obj) -> ((Target)obj).getAge().equals(30) )
+                .validate();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testValidationFieldOrLogicNull() {
+        Validation validation = ValidationSupport.target(target)
+                .field("", null)
+                .validate();
+    }
+
 }
