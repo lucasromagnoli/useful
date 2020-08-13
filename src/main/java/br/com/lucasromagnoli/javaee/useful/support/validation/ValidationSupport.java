@@ -1,11 +1,14 @@
 package br.com.lucasromagnoli.javaee.useful.support.validation;
 
+import br.com.lucasromagnoli.javaee.useful.support.object.ObjectSupport;
+import br.com.lucasromagnoli.javaee.useful.support.string.StringSupport;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class ValidationSupport {
-    private Object target;
-    private Map<String, ValidationField> validations;
+    private final Object target;
+    private final Map<String, ValidationField> validations;
 
     private ValidationSupport(Object target) {
         this.target = target;
@@ -13,12 +16,18 @@ public class ValidationSupport {
     };
 
     public ValidationSupport field(String field, ValidationField validationField) {
-        validations.put(field, validationField);
+        if (StringSupport.isEmpty(field) || ObjectSupport.isNull(validationField)) {
+            throw new NullPointerException("The field needs a name and its validation rule");
+        }
 
+        validations.put(field, validationField);
         return this;
     }
 
     public static ValidationSupport target(Object target) {
+        if (target == null) {
+            throw new NullPointerException("The target cannot be null");
+        }
         return new ValidationSupport(target);
     }
 
@@ -43,8 +52,9 @@ public class ValidationSupport {
             }
         }
 
-        return new Validation(validationDetails,
-                validationDetails.size() > 0 ? ValidationType.UNSUCCESSFUL : ValidationType.SUCCESS);
+        return new Validation(validationDetails, validationDetails.size() > 0
+                ? ValidationType.UNSUCCESSFUL
+                : ValidationType.SUCCESS);
     }
 
     private enum Category {
