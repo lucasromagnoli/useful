@@ -25,7 +25,7 @@ public class ValidationSupport {
     }
 
     public static ValidationSupport target(Object target) {
-        if (target == null) {
+        if (ObjectSupport.isNull(target)) {
             throw new NullPointerException("The target cannot be null");
         }
         return new ValidationSupport(target);
