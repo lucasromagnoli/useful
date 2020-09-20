@@ -1,64 +1,28 @@
 package br.com.lucasromagnoli.javaee.useful.support.validation;
 
-import br.com.lucasromagnoli.javaee.useful.support.object.ObjectSupport;
+import br.com.lucasromagnoli.javaee.useful.support.number.NumberSupport;
 import br.com.lucasromagnoli.javaee.useful.support.string.StringSupport;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.math.BigDecimal;
 
 public class ValidationSupport {
-    private final Object target;
-    private final Map<String, ValidationField> validations;
-
-    private ValidationSupport(Object target) {
-        this.target = target;
-        this.validations = new HashMap<>();
-    };
-
-    public ValidationSupport field(String field, ValidationField validationField) {
-        if (StringSupport.isEmpty(field) || ObjectSupport.isNull(validationField)) {
-            throw new NullPointerException("The field needs a name and its validation rule");
+    private ValidationSupport() {};
+    
+    public static void stringLengthBetween(int min, int max, String target) {
+        if (!StringSupport.lengthBetween(min, max, target)) {
+            throw new StringValidationException();
         }
-
-        validations.put(field, validationField);
-        return this;
     }
-
-    public static ValidationSupport target(Object target) {
-        if (ObjectSupport.isNull(target)) {
-            throw new NullPointerException("The target cannot be null");
+    
+    public static void numberIsPositive(BigDecimal target) {
+        if (!NumberSupport.isPositive(target)) {
+            throw new NumberValidationException();
         }
-        return new ValidationSupport(target);
     }
 
-    public Validation validate() {
-        return validate(Category.STOP_ON_FIRST);
-    }
-
-    public Validation validateAll() {
-        return validate(Category.VALIDATE_ALL);
-    }
-
-    private Validation validate(Category stopOnFirst) {
-        Map<String, String> validationDetails = new HashMap<>();
-
-        for (Map.Entry<String, ValidationField> validation : validations.entrySet()) {
-            ValidationField validationField = validation.getValue();
-            if (!validationField.validate(target)) {
-                validationDetails.put(validation.getKey(), validationField.getMessage());
-                if (stopOnFirst.equals(Category.STOP_ON_FIRST)) {
-                    break;
-                }
-            }
+    public static void numberIsPositive(int id) {
+        if (!NumberSupport.isPositive(id)) {
+            throw new NumberValidationException();
         }
-
-        return new Validation(validationDetails, validationDetails.size() > 0
-                ? ValidationType.UNSUCCESSFUL
-                : ValidationType.SUCCESS);
-    }
-
-    private enum Category {
-        STOP_ON_FIRST,
-        VALIDATE_ALL
     }
 }
